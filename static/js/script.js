@@ -130,13 +130,7 @@ document.getElementById('decodeForm').addEventListener('submit', async function(
   }
 });
 
-// Progress tracking from server
-const eventSource = new EventSource('/progress');
-eventSource.onmessage = function(e) {
-    const progress = JSON.parse(e.data).progress;
-    document.getElementById('progressPercent').textContent = progress;
-    document.getElementById('progressBar').style.width = `${progress}%`;
-};
+
 
 // Add this to script.js to handle the encode form
 document.querySelector('form[action="/encode"]').addEventListener('submit', function(e) {

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file, jsonify, Response
 import json
 import os
-import time  # For time.sleep if using progress updates
+import time  
 from steganography import encode_image, decode_image
 from werkzeug.utils import secure_filename
 
@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# In app.py, update the encode route to handle both GET and POST
 @app.route('/encode', methods=['GET', 'POST'])
 def encode():
     if request.method == 'POST':
@@ -77,13 +76,7 @@ def decode():
     except Exception as e:
         return {'error': str(e)}, 500
 
-@app.route('/progress')
-def progress():
-    def generate():
-        for i in range(101):
-            yield f"data: {{\"progress\": {i}}}\n\n"
-            time.sleep(0.05)  # Slower progression
-    return Response(generate(), mimetype='text/event-stream')
+
 
 @app.route('/')
 def home():
