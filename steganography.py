@@ -1,11 +1,36 @@
 from PIL import Image
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import os
 
-def encode_image(image_path, message, output_path):
+def generate_aes_key():
+    return AESGCM.generate_key(bit_length=256)
+
+def encrypt_message(key: bytes, plaintext: str):
+    nonce = os.urandom(12)
+    aesgcm = AESGCM(key)
+    ciphertext = aesgcm.encrypt(nonce, plaintext.encode(), None)
+    return nonce + ciphertext  # Combine nonce and ciphertext for easier handling
+
+def decrypt_message(key: bytes, encrypted_data: bytes):
+    nonce = encrypted_data[:12]
+    ciphertext = encrypted_data[12:]
+    aesgcm = AESGCM(key)
+    return aesgcm.decrypt(nonce, ciphertext, None).decode()
+
+def encode_image(image_path, message, output_path, key=None):
     img = Image.open(image_path)
     if img.mode not in ('RGB', 'RGBA'):
         img = img.convert('RGB')
     
-    binary_msg = ''.join(format(ord(c), '08b') for c in message) + '1111111111111110'
+    # Encrypt the message if a key is provided
+    if key:
+        encrypted_data = encrypt_message(key, message)
+        # Convert the encrypted bytes to binary string
+        binary_msg = ''.join(format(byte, '08b') for byte in encrypted_data)
+    else:
+        binary_msg = ''.join(format(ord(c), '08b') for c in message)
+    
+    binary_msg += '1111111111111110'  # Add delimiter
     
     if len(binary_msg) > img.width * img.height * 3:
         raise ValueError("Message too large for image!")
@@ -29,8 +54,7 @@ def encode_image(image_path, message, output_path):
     new_img.putdata(new_pixels)
     new_img.save(output_path, format='PNG')
 
-
-def decode_image(image_path):
+def decode_image(image_path, key=None):
     img = Image.open(image_path)
     pixels = list(img.getdata())
     binary_msg = ""
@@ -42,9 +66,20 @@ def decode_image(image_path):
     delimiter = '1111111111111110'
     if delimiter in binary_msg:
         msg_bits = binary_msg.split(delimiter)[0]
-        message = ""
-        for i in range(0, len(msg_bits), 8):
-            byte = msg_bits[i:i+8]
-            message += chr(int(byte, 2))
-        return message
+        
+        if key:
+            # Convert binary string back to bytes
+            encrypted_bytes = bytes(int(msg_bits[i:i+8], 2) for i in range(0, len(msg_bits), 8))
+            try:
+                message = decrypt_message(key, encrypted_bytes)
+                return message
+            except Exception as e:
+                return f"Decryption failed: {str(e)}"
+        else:
+            # Original decoding for unencrypted messages
+            message = ""
+            for i in range(0, len(msg_bits), 8):
+                byte = msg_bits[i:i+8]
+                message += chr(int(byte, 2))
+            return message
     return "No hidden message found"

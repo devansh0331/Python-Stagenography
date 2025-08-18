@@ -486,3 +486,80 @@ footer {
         font-size: 2rem;
     }
 }
+
+/*After AESGCM (First) Cryptography Added*/
+/* Add these to your existing CSS */
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    user-select: none;
+    color: #0f0;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: transparent;
+    border: 2px solid #0f0;
+    border-radius: 4px;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid #0f0;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Style for key input fields */
+.glow-input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background-color: rgba(0, 20, 0, 0.5);
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-family: 'Share Tech Mono', monospace;
+    border-radius: 4px;
+}
+
+.glow-input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px #0f0;
+}
