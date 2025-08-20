@@ -563,3 +563,62 @@ footer {
     outline: none;
     box-shadow: 0 0 5px #0f0;
 }
+
+/* Key display section styles */
+.key-display-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 30, 0, 0.3);
+    border: 1px solid var(--primary);
+    border-radius: 5px;
+}
+
+.key-display-section h3 {
+    color: var(--primary);
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.key-display-section p {
+    color: var(--secondary);
+    margin: 10px 0;
+}
+
+.key-display-container {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.key-display-input {
+    flex: 1;
+    padding: 10px;
+    background: var(--darker);
+    border: 1px solid var(--primary);
+    color: var(--light);
+    font-family: 'Share Tech Mono', monospace;
+    border-radius: 3px 0 0 3px;
+    border-right: none;
+}
+
+.btn-copy-key {
+    padding: 10px 15px;
+    background: var(--secondary);
+    color: black;
+    border: 1px solid var(--primary);
+    border-radius: 0 3px 3px 0;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn-copy-key:hover {
+    background: var(--primary);
+}
+
+.key-warning {
+    font-size: 0.9rem;
+    color: #ffa500 !important;
+    font-style: italic;
+}

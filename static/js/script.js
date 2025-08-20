@@ -42,6 +42,25 @@ document.addEventListener('DOMContentLoaded', () => {
     encryptCheckbox.addEventListener('change', function() {
         keyContainer.style.display = this.checked ? 'block' : 'none';
     });
+
+     const savedKey = sessionStorage.getItem('lastGeneratedKey');
+    if (savedKey) {
+        document.getElementById('generatedKey').value = savedKey;
+        document.getElementById('keyDisplaySection').style.display = 'block';
+        
+        // Reattach copy functionality
+        document.getElementById('copyKeyBtn').addEventListener('click', function() {
+            const keyInput = document.getElementById('generatedKey');
+            keyInput.select();
+            document.execCommand('copy');
+            
+            const originalText = this.textContent;
+            this.textContent = 'COPIED!';
+            setTimeout(() => {
+                this.textContent = originalText;
+            }, 2000);
+        });
+    }
 });
 
 // Initialize loader with enhanced status messages
@@ -142,6 +161,7 @@ document.getElementById('decodeForm').addEventListener('submit', async function(
 });
 
 // Enhanced encode form handler
+// Enhanced encode form handler
 document.getElementById('encodeForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -150,6 +170,7 @@ document.getElementById('encodeForm').addEventListener('submit', async function(
     const originalButtonText = submitButton.textContent;
     const encryptCheckbox = document.getElementById('encryptCheckbox');
     const manualKey = this.querySelector('input[name="key"]').value;
+    const keyDisplaySection = document.getElementById('keyDisplaySection');
     
     try {
         submitButton.disabled = true;
@@ -165,11 +186,27 @@ document.getElementById('encodeForm').addEventListener('submit', async function(
             throw new Error(errorData.error || 'Encoding failed');
         }
         
-        // Only show key alert if encryption was enabled AND no manual key was provided
+        // Only show key section if encryption was enabled AND no manual key was provided
         if (encryptCheckbox.checked && !manualKey) {
             const encryptionKey = response.headers.get('X-Encryption-Key');
             if (encryptionKey) {
-                alert(`🔐 ENCRYPTION KEY (SAVE THIS!):\n\n${encryptionKey}\n\nThis key is required to decode the message.`);
+                // Display the key in the UI instead of alert
+                document.getElementById('generatedKey').value = encryptionKey;
+                keyDisplaySection.style.display = 'block';
+                
+                // Add copy functionality
+                document.getElementById('copyKeyBtn').addEventListener('click', function() {
+                    const keyInput = document.getElementById('generatedKey');
+                    keyInput.select();
+                    document.execCommand('copy');
+                    
+                    // Show copied feedback
+                    const originalText = this.textContent;
+                    this.textContent = 'COPIED!';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 2000);
+                });
             }
         }
         

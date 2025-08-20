@@ -59,6 +59,16 @@
 </div>
                 <button type="submit" class="btn btn-encode">ENCRYPT & HIDE</button>
             </form>
+             <!-- Add this section for the encryption key display -->
+    <div id="keyDisplaySection" class="key-display-section" style="display: none;">
+        <h3>🔑 ENCRYPTION KEY GENERATED</h3>
+        <p>Save this key to decode your message later:</p>
+        <div class="key-display-container">
+            <input type="text" id="generatedKey" readonly class="key-display-input">
+            <button id="copyKeyBtn" class="btn-copy-key">COPY</button>
+        </div>
+        <p class="key-warning">⚠️ This key will disappear when you refresh the page</p>
+    </div>
         </div>
 
         <!-- Decoding Section -->
