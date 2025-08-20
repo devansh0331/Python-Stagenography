@@ -1,65 +1,90 @@
 # Steganography App
 
-This is a simple Python-based steganography application that allows users to encode and decode secret messages within image files. The application provides a graphical user interface (GUI) built using Tkinter.
+This is a Python-based steganography web application that allows users to encode and decode secret messages within image files. The application uses Flask for the backend and provides a modern web interface for user interaction.
 
 ## Features
 
 - **Encode Messages**: Hide a secret message inside an image file.
 - **Decode Messages**: Extract a hidden message from an encoded image file.
-- **User-Friendly Interface**: Simple and intuitive GUI for encoding and decoding operations.
+- **AES-256 Encryption**: Optionally encrypt messages for added security.
+- **Modern Web Interface**: Intuitive and responsive UI with real-time feedback.
+- **Downloadable Results**: Save encoded images directly from the browser.
 
 ## Requirements
 
 - Python 3.x
 - Required Python libraries:
-  - `tkinter` (for GUI)
-  - `Pillow` (for image processing)
+  - `Flask`
+  - `Pillow`
+  - `cryptography`
 
 ## Installation
 
 1. Clone or download this repository to your local machine.
 2. Install the required Python libraries using pip:
    ```bash
-   pip install pillow
+   pip install flask pillow cryptography
    ```
+3. Run the Flask application:
+   ```bash
+   python app.py
+   ```
+4. Open your browser and navigate to `http://127.0.0.1:5000`.
+
 
 ## Usage
 
-1. Run the application:
-   ```bash
-   python gui.py
-   ```
-2. Use the GUI to:
-   - Enter a message in the "Message" field.
-   - Click **Encode** to hide the message in an image file.
-   - Click **Decode** to extract a hidden message from an encoded image file.
+### Encoding
+1. Upload an image file.
+2. Enter the secret message.
+3. (Optional) Enable encryption and provide a key or let the app generate one.
+4. Click **Encrypt & Hide** to encode the message.
+5. Download the encoded image.
+
+### Decoding
+1. Upload an encoded image file.
+2. (Optional) Provide the encryption key if the message was encrypted.
+3. Click **Extract Secret** to decode the message.
 
 ## How It Works
 
 ### Encoding
-The application converts the message into binary format and embeds it into the least significant bits (LSBs) of the image's pixel data. A delimiter (`1111111111111110`) is added to mark the end of the message.
+The application converts the message into binary format and embeds it into the least significant bits (LSBs) of the image's pixel data. If encryption is enabled, the message is encrypted using AES-256 before embedding.
 
 ### Decoding
-The application reads the LSBs of the pixel data to reconstruct the binary message. It stops reading when it encounters the delimiter and converts the binary data back into text.
+The application reads the LSBs of the pixel data to reconstruct the binary message. If the message is encrypted, the provided key is used to decrypt it.
 
 ## File Structure
 
 ```
 Steganography App/
-├── gui.py         # Main application file with GUI and steganography logic
-├── Readme.md      # Project documentation
+├── app.py                # Flask application backend
+├── steganography.py      # Core steganography logic
+├── templates/
+│   └── index.html        # HTML template for the web interface
+├── static/
+│   ├── css/
+│   │   └── style.css     # Styles for the web interface
+│   ├── js/
+│   │   └── script.js     # JavaScript for interactivity
+│   └── images/
+│       └── favicon.ico   # Favicon for the web app
+├── uploads/              # Directory for uploaded and processed files
+├── Readme.md             # Project documentation
 ```
 
 ## Example
 
-1. **Encoding**:
-   - Select an image file.
-   - Enter a secret message.
-   - Save the encoded image.
+### Encoding
+1. Upload an image file (e.g., `example.png`).
+2. Enter a secret message (e.g., `Hello, World!`).
+3. Enable encryption and save the generated key.
+4. Download the encoded image (e.g., `encoded_example.png`).
 
-2. **Decoding**:
-   - Select an encoded image file.
-   - View the extracted message.
+### Decoding
+1. Upload the encoded image (e.g., `encoded_example.png`).
+2. Provide the encryption key if applicable.
+3. Extract and view the hidden message.
 
 ## Limitations
 
@@ -72,5 +97,6 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Acknowledgments
 
+- [Flask Documentation](https://flask.palletsprojects.com/)
 - [Pillow Documentation](https://pillow.readthedocs.io/)
-- [Tkinter Documentation](https://docs.python.org/3/library/tkinter.html)
+- [Cryptography Documentation](https://cryptography.io/)
